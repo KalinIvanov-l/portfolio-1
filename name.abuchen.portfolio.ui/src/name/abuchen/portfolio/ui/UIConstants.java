@@ -1,7 +1,6 @@
 package name.abuchen.portfolio.ui;
 
-public interface UIConstants
-{
+public interface UIConstants {
     interface Part // NOSONAR
     {
         String PORTFOLIO = "name.abuchen.portfolio.ui.part.portfolio"; //$NON-NLS-1$
@@ -14,8 +13,7 @@ public interface UIConstants
         String MAIN = "name.abuchen.portfolio.ui.partstack.main"; //$NON-NLS-1$
     }
 
-    interface Event
-    {
+    interface Event {
         interface Log // NOSONAR
         {
             String CREATED = "errorlog/created"; //$NON-NLS-1$
@@ -121,8 +119,8 @@ public interface UIConstants
          * data file.
          */
         String AUTO_SAVE_FILE = "AUTO_SAVE_FILE"; //$NON-NLS-1$
-        
-        
+
+
         /**
          * Preference key whether to store settings (column width, last expanded
          * tree nodes, etc.) next to the data file as opposed to in the

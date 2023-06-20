@@ -22,8 +22,7 @@ import org.osgi.framework.FrameworkUtil;
 
 import name.abuchen.portfolio.ui.preferences.ScopedPreferenceStore;
 
-public class PortfolioPlugin implements BundleActivator
-{
+public class PortfolioPlugin implements BundleActivator {
     public static final String PLUGIN_ID = "name.abuchen.portfolio.ui"; //$NON-NLS-1$
 
     private static PortfolioPlugin instance;
@@ -32,15 +31,13 @@ public class PortfolioPlugin implements BundleActivator
     private IPreferenceStore preferenceStore;
     private IDialogSettings dialogSettings;
 
-    public PortfolioPlugin()
-    {
+    public PortfolioPlugin() {
         super();
         instance = this; // NOSONAR bundle is singleton
     }
 
     @Override
-    public void start(BundleContext context) throws Exception
-    {
+    public void start(BundleContext context) throws Exception {
         bundle = context.getBundle();
 
         setupProxyAuthenticator();
@@ -49,8 +46,7 @@ public class PortfolioPlugin implements BundleActivator
     }
 
     @Override
-    public void stop(BundleContext context) throws Exception
-    {
+    public void stop(BundleContext context) throws Exception {
         if (preferenceStore != null && preferenceStore.needsSaving())
             ((ScopedPreferenceStore) preferenceStore).save();
 
@@ -59,18 +55,14 @@ public class PortfolioPlugin implements BundleActivator
         Job.getJobManager().cancel(null);
     }
 
-    private void setupProxyAuthenticator()
-    {
+    private void setupProxyAuthenticator() {
         // http://stackoverflow.com/questions/1626549/authenticated-http-proxy-with-java/16340273#16340273
         // Java ignores http.proxyUser. Here come's the workaround.
-        Authenticator.setDefault(new Authenticator()
-        {
+        Authenticator.setDefault(new Authenticator() {
             @SuppressWarnings("nls")
             @Override
-            protected PasswordAuthentication getPasswordAuthentication()
-            {
-                if (getRequestorType() == RequestorType.PROXY)
-                {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                if (getRequestorType() == RequestorType.PROXY) {
                     String protocol = getRequestingProtocol().toLowerCase();
                     String host = System.getProperty(protocol + ".proxyHost", "");
                     String port = System.getProperty(protocol + ".proxyPort", "80");
@@ -85,98 +77,78 @@ public class PortfolioPlugin implements BundleActivator
         });
     }
 
-    public Bundle getBundle()
-    {
+    public Bundle getBundle() {
         return bundle;
     }
 
-    public IPreferenceStore getPreferenceStore()
-    {
+    public IPreferenceStore getPreferenceStore() {
         return preferenceStore;
     }
 
-    public IPath getStateLocation()
-    {
+    public IPath getStateLocation() {
         return Platform.getStateLocation(bundle);
     }
 
-    public IDialogSettings getDialogSettings()
-    {
+    public IDialogSettings getDialogSettings() {
         if (dialogSettings == null)
             loadDialogSettings();
 
         return dialogSettings;
     }
 
-    private File getSettingsFile()
-    {
+    private File getSettingsFile() {
         return new File(getStateLocation().toFile(), "dialog_settings.xml"); //$NON-NLS-1$
     }
 
-    private void loadDialogSettings()
-    {
-        try
-        {
+    private void loadDialogSettings() {
+        try {
             dialogSettings = new DialogSettings("PP"); //$NON-NLS-1$
 
             File file = getSettingsFile();
             if (file.exists())
                 dialogSettings.load(file.getAbsolutePath());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             log(e);
         }
     }
 
-    private void saveDialogSettings()
-    {
+    private void saveDialogSettings() {
         if (dialogSettings == null)
             return;
 
-        try
-        {
+        try {
             dialogSettings.save(getSettingsFile().getAbsolutePath());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             log(e);
         }
     }
 
-    public static PortfolioPlugin getDefault()
-    {
+    public static PortfolioPlugin getDefault() {
         return instance;
     }
 
-    public static final void log(IStatus status)
-    {
+    public static final void log(IStatus status) {
         Platform.getLog(FrameworkUtil.getBundle(PortfolioPlugin.class)).log(status);
     }
 
-    public static void log(Throwable t)
-    {
+    public static void log(Throwable t) {
         log(new Status(IStatus.ERROR, PLUGIN_ID, t.getMessage(), t));
     }
 
-    public static void log(String message)
-    {
+    public static void log(String message) {
         log(new Status(IStatus.ERROR, PLUGIN_ID, message));
     }
 
-    public static void info(String message)
-    {
+    public static void info(String message) {
         log(new Status(IStatus.INFO, PLUGIN_ID, message));
     }
 
-    public static void log(List<Exception> errors)
-    {
+    public static void log(List<Exception> errors) {
         for (Exception e : errors)
             log(e);
     }
 
-    public static boolean isDevelopmentMode()
-    {
+    public static boolean isDevelopmentMode() {
         return System.getProperty("osgi.dev") != null; //$NON-NLS-1$
     }
 }

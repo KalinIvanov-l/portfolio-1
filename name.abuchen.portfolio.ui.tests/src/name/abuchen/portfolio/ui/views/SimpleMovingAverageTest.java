@@ -18,14 +18,12 @@ import name.abuchen.portfolio.money.Values;
 import name.abuchen.portfolio.ui.views.SecuritiesChart.ChartInterval;
 
 @SuppressWarnings("nls")
-public class SimpleMovingAverageTest
-{
+public class SimpleMovingAverageTest {
     private Security securityOnePrice;
     private Security securityTenPrices;
 
     @Before
-    public void prepareSecurity()
-    {
+    public void prepareSecurity() {
 
         securityOnePrice = new Security();
         securityTenPrices = new Security();
@@ -38,8 +36,7 @@ public class SimpleMovingAverageTest
         securityOnePrice.addPrice(price);
 
         int i = 1;
-        while (i <= 10)
-        {
+        while (i <= 10) {
             if (i < 10)
                 date = LocalDate.parse("0" + i + ".01.2017", formatter);
             else
@@ -55,24 +52,21 @@ public class SimpleMovingAverageTest
     }
 
     @Test
-    public void testSecurityHasOnlyOnePrice()
-    {
+    public void testSecurityHasOnlyOnePrice() {
         ChartInterval interval = new ChartInterval(securityOnePrice.getPrices().get(0).getDate(), LocalDate.now());
         ChartLineSeriesAxes sma = new SimpleMovingAverage(200, this.securityOnePrice, interval).getSMA();
         assertThat(sma.getDates(), is(IsNull.nullValue()));
     }
 
     @Test
-    public void testSecurityIsNull()
-    {
+    public void testSecurityIsNull() {
         ChartInterval interval = new ChartInterval(securityOnePrice.getPrices().get(0).getDate(), LocalDate.now());
         ChartLineSeriesAxes sma = new SimpleMovingAverage(200, null, interval).getSMA();
         assertThat(sma.getDates(), is(IsNull.nullValue()));
     }
 
     @Test
-    public void testCorrectSMAEntries()
-    {
+    public void testCorrectSMAEntries() {
         ChartInterval interval = new ChartInterval(securityTenPrices.getPrices().get(0).getDate(), LocalDate.now());
         ChartLineSeriesAxes sma = new SimpleMovingAverage(10, this.securityTenPrices, interval).getSMA();
         assertThat(sma, is(IsNull.notNullValue()));
@@ -81,13 +75,11 @@ public class SimpleMovingAverageTest
     }
 
     @Test
-    public void testSufficientPriceDataPass()
-    {
+    public void testSufficientPriceDataPass() {
         Security security = new Security();
 
         LocalDate date = LocalDate.parse("2016-01-01");
-        for (int ii = 0; ii < 300; ii++)
-        {
+        for (int ii = 0; ii < 300; ii++) {
             security.addPrice(new SecurityPrice(date, Values.Quote.factorize(10)));
             date = date.plusDays(1);
         }
@@ -100,20 +92,18 @@ public class SimpleMovingAverageTest
     }
 
     @Test
-    public void testSufficientPriceDataStartDate()
-    {
+    public void testSufficientPriceDataStartDate() {
         Security security = new Security();
 
         LocalDate date = LocalDate.parse("2016-01-01");
-        for (int ii = 0; ii < 300; ii++)
-        {
+        for (int ii = 0; ii < 300; ii++) {
             security.addPrice(new SecurityPrice(date, Values.Quote.factorize(10)));
             date = date.plusDays(1);
         }
         LocalDate startDate = LocalDate.parse("2016-06-01");
         Date isStartDate = java.sql.Date.valueOf(startDate);
         ChartLineSeriesAxes sma = new SimpleMovingAverage(10, security, new ChartInterval(startDate, LocalDate.now()))
-                        .getSMA();
+                .getSMA();
         assertThat(sma, is(IsNull.notNullValue()));
         assertThat(sma.getDates()[0], is(isStartDate));
     }

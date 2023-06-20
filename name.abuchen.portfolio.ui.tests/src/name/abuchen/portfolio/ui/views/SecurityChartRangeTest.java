@@ -18,17 +18,14 @@ import name.abuchen.portfolio.ui.views.SecuritiesChart.ChartInterval;
 import name.abuchen.portfolio.ui.views.SecuritiesChart.ChartRange;
 
 @SuppressWarnings("nls")
-public class SecurityChartRangeTest
-{
+public class SecurityChartRangeTest {
     private static List<SecurityPrice> prices;
 
     @BeforeClass
-    public static void setupSecurityPrices()
-    {
+    public static void setupSecurityPrices() {
         prices = new ArrayList<>();
 
-        for (int ii = 1; ii < 30; ii++)
-        {
+        for (int ii = 1; ii < 30; ii++) {
             // skip every 10th date to create gaps (to test the binary search)
 
             if (ii % 10 != 0)
@@ -37,8 +34,7 @@ public class SecurityChartRangeTest
     }
 
     @Test
-    public void testRangeIntersection()
-    {
+    public void testRangeIntersection() {
         ChartInterval interval = new ChartInterval(LocalDate.parse("2019-01-02"), LocalDate.parse("2019-01-05"));
         ChartRange range = ChartRange.createFor(prices, interval);
 
@@ -47,8 +43,7 @@ public class SecurityChartRangeTest
     }
 
     @Test
-    public void testRangeIfIntervalStartsBefore()
-    {
+    public void testRangeIfIntervalStartsBefore() {
         ChartInterval interval = new ChartInterval(LocalDate.parse("2018-01-02"), LocalDate.parse("2019-01-05"));
         ChartRange range = ChartRange.createFor(prices, interval);
 
@@ -57,8 +52,7 @@ public class SecurityChartRangeTest
     }
 
     @Test
-    public void testRangeIfIntervalEndsAfter()
-    {
+    public void testRangeIfIntervalEndsAfter() {
         ChartInterval interval = new ChartInterval(LocalDate.parse("2019-01-02"), LocalDate.parse("2019-12-01"));
         ChartRange range = ChartRange.createFor(prices, interval);
 
@@ -67,8 +61,7 @@ public class SecurityChartRangeTest
     }
 
     @Test
-    public void testRangeIfIntervalStartsOnGap()
-    {
+    public void testRangeIfIntervalStartsOnGap() {
         ChartInterval interval = new ChartInterval(LocalDate.parse("2019-01-10"), LocalDate.parse("2019-01-12"));
         ChartRange range = ChartRange.createFor(prices, interval);
 
@@ -78,8 +71,7 @@ public class SecurityChartRangeTest
     }
 
     @Test
-    public void testRangeIfIntervalEndsOnGap()
-    {
+    public void testRangeIfIntervalEndsOnGap() {
         ChartInterval interval = new ChartInterval(LocalDate.parse("2019-01-08"), LocalDate.parse("2019-01-10"));
         ChartRange range = ChartRange.createFor(prices, interval);
 
@@ -89,8 +81,7 @@ public class SecurityChartRangeTest
     }
 
     @Test
-    public void testRangeIfIntervalStartsAndEndsOnGap()
-    {
+    public void testRangeIfIntervalStartsAndEndsOnGap() {
         ChartInterval interval = new ChartInterval(LocalDate.parse("2019-01-10"), LocalDate.parse("2019-01-20"));
         ChartRange range = ChartRange.createFor(prices, interval);
 
@@ -101,8 +92,7 @@ public class SecurityChartRangeTest
     }
 
     @Test
-    public void testRangeIfIntervalDoesNotIntersect()
-    {
+    public void testRangeIfIntervalDoesNotIntersect() {
         ChartInterval interval = new ChartInterval(LocalDate.parse("2019-05-01"), LocalDate.parse("2019-05-10"));
         ChartRange range = ChartRange.createFor(prices, interval);
 

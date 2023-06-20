@@ -18,7 +18,7 @@ See https://www.portfolio-performance.info for more details.
 
 ### Eclipse Setup
 
-To develop, use the latest [Eclipse IDE](https://www.eclipse.org/downloads/) release plus **Plug-in Development Environment (PDE)**. PDE homepage is https://www.eclipse.org/pde/ and it can be installed via Help/Install new Software. The link for the update site is mentioned in the PDE docs.
+To develop, use the latest [Eclipse IDE](https://www.eclipse.org/downloads/) release plus **Plug-in Development Environment (PDE)**. PDE homepage is https://www.eclipse.org/pde/ and it can be installed via Help/Install new Software. The link for the updated site is mentioned in the PDE docs.
 
 Optionally, install via the Eclipse Marketplace
 * infinitest
@@ -39,12 +39,12 @@ After importing the Portfolio Performance projects in Eclipse, they will not com
 ### Set Target Platform
 
 * Open the portfolio-target-definition project
-* Open the portfolio-target-definition.target file with the Target Editor (this may take a while as it requires Internet access). If you just get an XML file, use right click and chose Open With *Target Editor*
+* Open the portfolio-target-definition.target file with the Target Editor (this may take a while as it requires Internet access). If you just get an XML file, use right-click and choose Open With *Target Editor*
 * In the resulting editor, click on the "Set as Active Target Platform" link at the top right (this may also take a while)
 
 ### Run Program
 
-Run the application and the tests with the launch configurations stored in ~/portfolio-app/eclipse folder (right-click "Run As").
+Run the application and the tests with the launch configurations stored in the ~/portfolio-app/eclipse folder (right-click "Run As").
 
 :warning: The launch configuration needs an update when bundles are added and removed or the OS platform changes. If the program does not start, try selecting "Add required plug-ins" in the launch configuration dialog.
 

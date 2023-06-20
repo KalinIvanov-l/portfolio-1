@@ -14,15 +14,13 @@ import name.abuchen.portfolio.ui.update.NewVersion.ConditionalMessage;
 import name.abuchen.portfolio.ui.update.NewVersion.Release;
 
 @SuppressWarnings("nls")
-public class NewVersionTest
-{
+public class NewVersionTest {
     @Test
-    public void testConditionalMessage()
-    {
+    public void testConditionalMessage() {
         String history = "-- 0.30.1\n" //
-                        + "~~ (something=true)\n" //
-                        + "~~ hello world\n" //
-                        + "* text\n";
+                + "~~ (something=true)\n" //
+                + "~~ hello world\n" //
+                + "* text\n";
 
         NewVersion newVersion = new NewVersion("0.30.1");
         newVersion.setVersionHistory(history);
@@ -49,12 +47,11 @@ public class NewVersionTest
     }
 
     @Test
-    public void testIfBundleExists()
-    {
+    public void testIfBundleExists() {
         String history = "-- 0.30.1\n" //
-                        + "~~ ($bundle.list=name.abuchen.portfolio.*)\n" //
-                        + "~~ hello world\n" //
-                        + "* text\n";
+                + "~~ ($bundle.list=name.abuchen.portfolio.*)\n" //
+                + "~~ hello world\n" //
+                + "* text\n";
 
         NewVersion newVersion = new NewVersion("0.30.1");
         newVersion.setVersionHistory(history);
@@ -66,12 +63,11 @@ public class NewVersionTest
     }
 
     @Test
-    public void testIfBundleNotExists()
-    {
+    public void testIfBundleNotExists() {
         String history = "-- 0.30.1\n" //
-                        + "~~ ($bundle.list=something.*)\n" //
-                        + "~~ hello world\n" //
-                        + "* text\n";
+                + "~~ ($bundle.list=something.*)\n" //
+                + "~~ hello world\n" //
+                + "* text\n";
 
         NewVersion newVersion = new NewVersion("0.30.1");
         newVersion.setVersionHistory(history);
@@ -83,14 +79,13 @@ public class NewVersionTest
     }
 
     @Test
-    public void testMultipleConditionalMessage()
-    {
+    public void testMultipleConditionalMessage() {
         String history = "-- 0.30.1\n" //
-                        + "~~ ($bundle.list=name.abuchen.portfolio.*&something=true)\n" //
-                        + "~~ hello world\n" //
-                        + "~~ ($bundle.list=name.abuchen.portfolio.*&something=false)\n" //
-                        + "~~ another day\n" //
-                        + "* text\n";
+                + "~~ ($bundle.list=name.abuchen.portfolio.*&something=true)\n" //
+                + "~~ hello world\n" //
+                + "~~ ($bundle.list=name.abuchen.portfolio.*&something=false)\n" //
+                + "~~ another day\n" //
+                + "* text\n";
 
         NewVersion newVersion = new NewVersion("0.30.1");
         newVersion.setVersionHistory(history);
@@ -123,12 +118,11 @@ public class NewVersionTest
     }
 
     @Test
-    public void testVersionConditionalMessage()
-    {
+    public void testVersionConditionalMessage() {
         String history = "-- 0.44.2\n"
-                        + "~~ ($version=" + FrameworkUtil.getBundle(NewVersionTest.class).getVersion() + ")\n"
-                        + "~~ hello world\n" //
-                        + "* text\n";
+                + "~~ ($version=" + FrameworkUtil.getBundle(NewVersionTest.class).getVersion() + ")\n"
+                + "~~ hello world\n" //
+                + "* text\n";
 
         NewVersion newVersion = new NewVersion("0.44.2");
         newVersion.setVersionHistory(history);
@@ -146,12 +140,11 @@ public class NewVersionTest
     }
 
     @Test
-    public void testVersionIsSmallerConditionalMessage()
-    {
+    public void testVersionIsSmallerConditionalMessage() {
         String history = "-- 0.44.2\n" //
-                        + "~~ (something=^0[.]([1-9]|[1-4][0-4])[.].*)\n" //
-                        + "~~ hello world\n" //
-                        + "* text\n";
+                + "~~ (something=^0[.]([1-9]|[1-4][0-4])[.].*)\n" //
+                + "~~ hello world\n" //
+                + "* text\n";
 
         NewVersion newVersion = new NewVersion("0.44.2");
         newVersion.setVersionHistory(history);

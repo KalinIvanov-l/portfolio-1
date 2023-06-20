@@ -46,32 +46,30 @@ import name.abuchen.portfolio.util.Interval;
  * See
  * https://www.wertpapier-forum.de/topic/38306-portfolio-performance-mein-neues-programm/?page=122#comment-1149392
  */
-public class IssuePerformanceIndicatorsWithPartialAssignmentTest
-{
+public class IssuePerformanceIndicatorsWithPartialAssignmentTest {
     private static Client CLIENT;
 
     private static Interval REPORTING_PERIOD = Interval.of(LocalDate.parse("2017-07-14"), //$NON-NLS-1$
-                    LocalDate.parse("2018-07-14")); //$NON-NLS-1$
+            LocalDate.parse("2018-07-14")); //$NON-NLS-1$
 
     private static ClientSnapshot SNAPSHOT;
 
     private static Map<Security, SecurityPerformanceRecord> SECURITY2RECORD;
 
     private Function<Stream<Object>, Object> sum = objects -> objects.map(e -> (Money) e)
-                    .collect(MoneyCollectors.sum(SNAPSHOT.getCurrencyConverter().getTermCurrency()));
+            .collect(MoneyCollectors.sum(SNAPSHOT.getCurrencyConverter().getTermCurrency()));
 
     private ElementValueProvider function_delta = new ElementValueProvider( //
-                    SecurityPerformanceRecord::getDelta, sum);
+            SecurityPerformanceRecord::getDelta, sum);
     private ElementValueProvider function_capital_gains = new ElementValueProvider(
-                    SecurityPerformanceRecord::getCapitalGainsOnHoldings, sum);
+            SecurityPerformanceRecord::getCapitalGainsOnHoldings, sum);
     private ElementValueProvider function_capical_gains_percent = new ElementValueProvider(
-                    SecurityPerformanceRecord::getCapitalGainsOnHoldingsPercent, null);
+            SecurityPerformanceRecord::getCapitalGainsOnHoldingsPercent, null);
 
     @BeforeClass
-    public static void setupClient() throws IOException
-    {
+    public static void setupClient() throws IOException {
         CLIENT = ClientFactory.load(IssuePerformanceIndicatorsWithPartialAssignmentTest.class
-                        .getResourceAsStream("IssuePerformanceIndicatorsWithPartialAssignment.xml")); //$NON-NLS-1$
+                .getResourceAsStream("IssuePerformanceIndicatorsWithPartialAssignment.xml")); //$NON-NLS-1$
 
         TestCurrencyConverter converter = new TestCurrencyConverter();
 
@@ -80,12 +78,11 @@ public class IssuePerformanceIndicatorsWithPartialAssignmentTest
         SecurityPerformanceSnapshot sps = SecurityPerformanceSnapshot.create(CLIENT, converter, REPORTING_PERIOD);
 
         SECURITY2RECORD = sps.getRecords().stream()
-                        .collect(Collectors.toMap(SecurityPerformanceRecord::getSecurity, r -> r));
+                .collect(Collectors.toMap(SecurityPerformanceRecord::getSecurity, r -> r));
     }
 
     @Test
-    public void testPartialAssignments() throws IOException
-    {
+    public void testPartialAssignments() throws IOException {
         // taxonomy - regions
 
         Taxonomy taxonomy = CLIENT.getTaxonomy("f8ffb083-774d-499e-a983-5c214eff7297"); //$NON-NLS-1$
@@ -94,25 +91,24 @@ public class IssuePerformanceIndicatorsWithPartialAssignmentTest
         provider.inputChanged(null, null, groupByRegions);
         Object[] elements = provider.getElements(null);
         Arrays.stream(elements).map(o -> (Element) o).filter(Element::isSecurity)
-                        .forEach(e -> e.setPerformance(REPORTING_PERIOD, SECURITY2RECORD.get(e.getSecurity())));
+                .forEach(e -> e.setPerformance(REPORTING_PERIOD, SECURITY2RECORD.get(e.getSecurity())));
 
         // check that element has only partial values
 
         checkValue(Arrays.stream(elements).map(o -> (Element) o).filter(Element::isGroupByTaxonomy).findFirst()
-                        .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, null);
+                .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, null);
 
         checkValue(Arrays.stream(elements).map(o -> (Element) o).filter(Element::isCategory)
-                        .filter(e -> e.getCategory().getClassification().getName().equals("Europa")).findFirst() //$NON-NLS-1$
-                        .orElseThrow(IllegalArgumentException::new), 62.94, 85.26, 62.94, null);
+                .filter(e -> e.getCategory().getClassification().getName().equals("Europa")).findFirst() //$NON-NLS-1$
+                .orElseThrow(IllegalArgumentException::new), 62.94, 85.26, 62.94, null);
 
         checkValue(Arrays.stream(elements).map(o -> (Element) o).filter(Element::isSecurity).filter(
                         e -> e.getValuation().equals(Money.of(CurrencyUnit.EUR, Values.Amount.factorize(1156.40))))
-                        .findFirst().orElseThrow(IllegalArgumentException::new), 62.94, 85.26, 62.94, 0.0576);
+                .findFirst().orElseThrow(IllegalArgumentException::new), 62.94, 85.26, 62.94, 0.0576);
     }
 
     @Test
-    public void testFullAssignments() throws IOException
-    {
+    public void testFullAssignments() throws IOException {
         // taxonomy - regions
 
         Taxonomy taxonomy = CLIENT.getTaxonomy("21baca92-db77-41f2-96d4-64e31ff4b4f5"); //$NON-NLS-1$
@@ -121,44 +117,40 @@ public class IssuePerformanceIndicatorsWithPartialAssignmentTest
         provider.inputChanged(null, null, groupByRegions);
         Object[] elements = provider.getElements(null);
         Arrays.stream(elements).map(o -> (Element) o).filter(Element::isSecurity)
-                        .forEach(e -> e.setPerformance(REPORTING_PERIOD, SECURITY2RECORD.get(e.getSecurity())));
+                .forEach(e -> e.setPerformance(REPORTING_PERIOD, SECURITY2RECORD.get(e.getSecurity())));
 
         // check that element has full values
 
         checkValue(Arrays.stream(elements).map(o -> (Element) o).filter(Element::isGroupByTaxonomy).findFirst()
-                        .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, null);
+                .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, null);
 
         checkValue(Arrays.stream(elements).map(o -> (Element) o).filter(Element::isCategory)
-                        .filter(e -> e.getCategory().getClassification().getName().equals("Welt")).findFirst() //$NON-NLS-1$
-                        .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, null);
+                .filter(e -> e.getCategory().getClassification().getName().equals("Welt")).findFirst() //$NON-NLS-1$
+                .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, null);
 
         checkValue(Arrays.stream(elements).map(o -> (Element) o).filter(Element::isSecurity).findFirst()
-                        .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, 0.0576);
+                .orElseThrow(IllegalArgumentException::new), 262.26, 355.26, 262.26, 0.0576);
     }
 
     private void checkValue(Element element, double profitLoss, double delta, double capital_gains,
-                    Double capital_gains_percent)
-    {
+                            Double capital_gains_percent) {
 
         assertThat(element.getProfitLoss(), //
-                        is(Money.of(CurrencyUnit.EUR, Values.Amount.factorize(profitLoss))));
+                is(Money.of(CurrencyUnit.EUR, Values.Amount.factorize(profitLoss))));
 
         // includes dividend payments
         assertThat((Money) function_delta.getValue(element, REPORTING_PERIOD),
-                        is(Money.of(CurrencyUnit.EUR, Values.Amount.factorize(delta))));
+                is(Money.of(CurrencyUnit.EUR, Values.Amount.factorize(delta))));
 
         assertThat((Money) function_capital_gains.getValue(element, REPORTING_PERIOD),
-                        is(Money.of(CurrencyUnit.EUR, Values.Amount.factorize(capital_gains))));
+                is(Money.of(CurrencyUnit.EUR, Values.Amount.factorize(capital_gains))));
 
-        if (capital_gains_percent == null)
-        {
+        if (capital_gains_percent == null) {
             assertThat((Double) function_capical_gains_percent.getValue(element, REPORTING_PERIOD), //
-                            nullValue());
-        }
-        else
-        {
+                    nullValue());
+        } else {
             assertThat((Double) function_capical_gains_percent.getValue(element, REPORTING_PERIOD), //
-                            closeTo(capital_gains_percent, 0.0001));
+                    closeTo(capital_gains_percent, 0.0001));
         }
     }
 }

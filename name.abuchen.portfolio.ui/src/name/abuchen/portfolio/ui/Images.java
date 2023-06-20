@@ -13,8 +13,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 @SuppressWarnings("restriction")
-public enum Images
-{
+public enum Images {
     LOGO_16("pp_16.png"), //$NON-NLS-1$
     LOGO_32("pp_32.png"), //$NON-NLS-1$
     LOGO_48("pp_48.png"), //$NON-NLS-1$
@@ -93,8 +92,7 @@ public enum Images
 
     DIVVYDIARY_LOGO("divvydiary.com-logo.png"); //$NON-NLS-1$
 
-    static
-    {
+    static {
         // Enable use of HiDPI icons as described here:
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=459412#c8
         // But: for now it needs enabling via JFace debug option, which in turn
@@ -111,16 +109,13 @@ public enum Images
 
     private final String file;
 
-    private Images(String file)
-    {
+    private Images(String file) {
         this.file = file;
     }
 
-    public ImageDescriptor descriptor()
-    {
+    public ImageDescriptor descriptor() {
         ImageDescriptor descriptor = imageRegistry.getDescriptor(file);
-        if (descriptor == null)
-        {
+        if (descriptor == null) {
             Bundle bundle = FrameworkUtil.getBundle(Images.class);
             IPath path = new Path("icons/" + file); //$NON-NLS-1$
             URL url = FileLocator.find(bundle, path, null);
@@ -130,19 +125,16 @@ public enum Images
         return descriptor;
     }
 
-    public Image image()
-    {
+    public Image image() {
         Image image = imageRegistry.get(file);
-        if (image == null)
-        {
+        if (image == null) {
             descriptor(); // lazy loading
             image = imageRegistry.get(file);
         }
         return image;
     }
 
-    public String getImageURI()
-    {
+    public String getImageURI() {
         return "platform:/plugin/" + PortfolioPlugin.PLUGIN_ID + "/icons/" + file; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }
